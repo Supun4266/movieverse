@@ -1,0 +1,20 @@
+#!/bin/sh
+# Small Maven wrapper: downloads Maven the first time, then runs it.
+# Usage: ./mvnw spring-boot:run   or   ./mvnw test
+set -e
+MAVEN_VERSION=3.9.11
+BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
+DIST_DIR="${MAVEN_USER_HOME:-$HOME/.m2}/wrapper/dists/apache-maven-$MAVEN_VERSION"
+MVN="$DIST_DIR/apache-maven-$MAVEN_VERSION/bin/mvn"
+
+if [ ! -f "$MVN" ]; then
+  echo "Downloading Maven $MAVEN_VERSION (only the first time)..."
+  mkdir -p "$DIST_DIR"
+  URL="https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/$MAVEN_VERSION/apache-maven-$MAVEN_VERSION-bin.tar.gz"
+  curl -fSL "$URL" -o "$DIST_DIR/maven.tar.gz"
+  tar -xzf "$DIST_DIR/maven.tar.gz" -C "$DIST_DIR"
+  rm -f "$DIST_DIR/maven.tar.gz"
+fi
+
+cd "$BASE_DIR"
+exec sh "$MVN" "$@"
