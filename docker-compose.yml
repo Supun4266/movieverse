@@ -1,0 +1,9 @@
+# Starts Kafka on localhost:9092 (single node, KRaft mode, no Zookeeper needed).
+# Usage:  docker compose up -d     (start)
+#         docker compose down      (stop)
+services:
+  kafka:
+    image: apache/kafka:3.8.0
+    container_name: movieverse-kafka
+    ports:
+      - "9092:9092"
